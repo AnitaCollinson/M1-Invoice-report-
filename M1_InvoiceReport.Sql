@@ -30,10 +30,10 @@ SELECT DISTINCT
             WHEN (soi.client_managed_vendor_flag = 1) THEN 'Yes'
         END) AS client_managed,
         si.authcode AS "Bank Response",
-        soi.base_cost AS "Item Cost",
-        soi.pb_netprice_merchant - soi.base_cost AS "Item Buying Margin",
+        (soi.base_cost * ssi.qty) AS "Item Cost", --Item cost*qty
+        (soi.pb_netprice_merchant - soi.base_cost)*ssi.qty AS "Item Buying Margin", --Item buying margin *qty
         soi.tax_amount AS "VAT/TAX",
-        soi.pb_shipping_merchant AS "Shipping Cost",
+        (soi.pb_shipping_merchant * ssi.qty)  AS "Shipping Cost", --shipping cost *qty
         soi.sku AS "Item (SKU) Name"
     FROM
              base_iredeem_iccs_v2.sales_flat_shipment_item ssi
